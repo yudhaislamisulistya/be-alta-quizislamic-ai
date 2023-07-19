@@ -16,13 +16,17 @@ func New() *echo.Echo {
 	}))
 
 	eJwt.GET("/users", controller.GetUsersController)
-	e.GET("/users/:id", controller.GetUserController)
+	eJwt.GET("/users/:id", controller.GetUserController)
 	e.POST("/users", controller.CreateUserController)
-	e.PUT("/users/:id", controller.UpdateUserController)
-	e.DELETE("/users/:id", controller.DeleteUserController)
+	eJwt.PUT("/users/:id", controller.UpdateUserController)
+	eJwt.DELETE("/users/:id", controller.DeleteUserController)
+	e.GET("/users/verification-email", controller.VerificationEmailUserController)
+	eJwt.POST("/users/verification-email", controller.CreateVerificationEmailUserController)
 
 	g := e.Group("/authentications")
-	g.POST("/login", controller.LoginUserController)
+	g.POST("/login", controller.LoginAuthenticationController)
+	g.POST("/forgot-password", controller.ForgotPasswordController)
+	g.POST("/change-password", controller.ChangePasswordController)
 
 	return e
 }

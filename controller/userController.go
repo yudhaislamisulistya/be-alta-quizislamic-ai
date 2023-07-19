@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"bytes"
 	"fmt"
 	"net/http"
+	"os"
 	"project/config"
 	"project/lib/util"
 	"project/middleware"
@@ -36,6 +38,13 @@ func GetUsersController(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"code":    "500",
 			"message": "Token Tidak Valid, Silahkan login ulang untuk mendapatkan token baru",
+		})
+	}
+
+	if !resultUser.(map[string]interface{})["data"].(model.User).IsAdmin {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Anda Bukan Admin",
 		})
 	}
 
@@ -120,6 +129,10 @@ func CreateUserController(c echo.Context) error {
 
 	user.Password = hashedPassword
 
+	tokenVerifiedEmail := util.GetToken(32)
+
+	user.TokenVerifiedEmail = tokenVerifiedEmail
+
 	result := config.DB.Save(&user)
 	err := result.Error
 
@@ -127,6 +140,39 @@ func CreateUserController(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"code":    "500",
 			"message": err.Error(),
+		})
+	}
+
+	template, errReadTemplate := util.ReadEmailTemplateUserActivation()
+
+	if errReadTemplate != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errReadTemplate.Error(),
+		})
+	}
+
+	verificationLink := os.Getenv("URL_APP") + "/users/verification-email?token=" + tokenVerifiedEmail
+
+	data := struct {
+		VerificationLink string
+	}{
+		VerificationLink: verificationLink,
+	}
+
+	body := new(bytes.Buffer)
+	errExecuteTemplate := template.Execute(body, data)
+	if errExecuteTemplate != nil {
+		return errExecuteTemplate
+	}
+	subject := "User Activation For Your Account - QuizIslamicAI"
+
+	errSendMail := util.SendMail(user.Email, subject, body.String())
+
+	if errSendMail != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errSendMail.Error(),
 		})
 	}
 
@@ -213,5 +259,119 @@ func DeleteUserController(c echo.Context) error {
 		"code":    "200",
 		"message": "success delete user",
 		"data":    temp_user_delete,
+	})
+}
+
+func VerificationEmailUserController(c echo.Context) error {
+	token := c.QueryParam("token")
+	user := model.User{}
+
+	result := config.DB.Where("token_verified_email = ?", token).First(&user)
+	err := result.Error
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Token Tidak Valid",
+		})
+	}
+
+	if user.IsVerifiedEmail {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Email Sudah Terverifikasi",
+		})
+	}
+
+	user.IsVerifiedEmail = true
+	result = config.DB.Save(&user)
+	err = result.Error
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{
+		"code":    "200",
+		"message": "success verification email",
+		"token":   token,
+	})
+}
+
+func CreateVerificationEmailUserController(c echo.Context) error {
+	user := model.User{}
+	c.Bind(&user)
+
+	result := config.DB.Where("email = ?", user.Email).First(&user)
+	err := result.Error
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if user.IsVerifiedEmail {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Email Sudah Terverifikasi",
+		})
+	}
+
+	tokenVerifiedEmail := util.GetToken(32)
+
+	user.TokenVerifiedEmail = tokenVerifiedEmail
+
+	result = config.DB.Save(&user)
+	err = result.Error
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	template, errReadTemplate := util.ReadEmailTemplateUserActivation()
+
+	if errReadTemplate != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errReadTemplate.Error(),
+		})
+	}
+
+	verificationLink := os.Getenv("URL_APP") + "/users/verification-email?token=" + tokenVerifiedEmail
+
+	data := struct {
+		VerificationLink string
+	}{
+		VerificationLink: verificationLink,
+	}
+
+	body := new(bytes.Buffer)
+	errExecuteTemplate := template.Execute(body, data)
+	if errExecuteTemplate != nil {
+		return errExecuteTemplate
+	}
+	subject := "User Activation For Your Account - QuizIslamicAI"
+
+	errSendMail := util.SendMail(user.Email, subject, body.String())
+
+	if errSendMail != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errSendMail.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success verification email",
+		"data":    user,
 	})
 }

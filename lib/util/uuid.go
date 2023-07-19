@@ -1,10 +1,15 @@
 package util
 
 import (
+	"crypto/md5"
+	"encoding/hex"
+	"fmt"
+	"log"
 	"project/config"
 	"project/model"
 
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func GenerateUUID() uuid.UUID {
@@ -13,6 +18,15 @@ func GenerateUUID() uuid.UUID {
 }
 
 func GetUserControllerByUUID(uuid string) interface{} {
+
+	fmt.Println("uuid", uuid)
+	if uuid == "" {
+		return map[string]string{
+			"code":    "500",
+			"message": "UUID Tidak Boleh Kosong",
+		}
+	}
+
 	user := model.User{}
 
 	result := config.DB.Where("uuid = ?", uuid).First(&user)
@@ -36,4 +50,16 @@ func GetUserControllerByUUID(uuid string) interface{} {
 		"message": "success get user",
 		"data":    user,
 	}
+}
+
+func GenerateToken(email string) string {
+	hash, err := bcrypt.GenerateFromPassword([]byte(email), bcrypt.DefaultCost)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Hash to store:", string(hash))
+
+	hasher := md5.New()
+	hasher.Write(hash)
+	return hex.EncodeToString(hasher.Sum(nil))
 }
