@@ -22,7 +22,7 @@ CourseGenAI is a Golang project that aims to revolutionize the learning experien
 - [x] Middleware (JWT, Static): Set up middleware for CourseGenAI, such as JWT (JSON Web Tokens) for authentication and Static Middleware for serving static assets.
   
 ## Pertemuan 3
-- [ ] Live di AWS: Deploy CourseGenAI live on AWS (Amazon Web Services) to make the application accessible to users over the internet.
+- [x] Live di AWS: Deploy CourseGenAI live on AWS (Amazon Web Services) to make the application accessible to users over the internet.
 - [ ] Continue Rest API: Continue working on the Rest API to enhance its functionality and make it more robust.
 
 ## Nice To Have (Optional)
