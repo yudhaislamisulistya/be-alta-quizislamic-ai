@@ -1,0 +1,8 @@
+version: '3'
+services:
+  app:
+    image: docker-app-quiz-islamic-ai
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
