@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Copy isi proyek Anda ke dalam working directory di dalam container
 COPY . .
+COPY .env .env
 
 # Build proyek Golang
 RUN go build -o main .
