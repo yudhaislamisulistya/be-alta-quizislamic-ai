@@ -15,9 +15,9 @@ CourseGenAI is a Golang project that aims to revolutionize the learning experien
 - [x] Repository: Set up the GitHub repository for the CourseGenAI project, including defining the project structure and initializing version control.
 
 ## Pertemuan 2
-- [ ] User Login/Register: Implement the user login and registration functionality for CourseGenAI. Users should be able to create accounts and log in to access personalized learning content.
+- [x] User Login/Register: Implement the user login and registration functionality for CourseGenAI. Users should be able to create accounts and log in to access personalized learning content.
 - [ ] CRUD (table apapun): Create basic CRUD operations for one of the tables in the database to efficiently manage data within the application.
-- [ ] Postman: Set up Postman to test the APIs and ensure they are working correctly for CourseGenAI.
+- [x] Postman: Set up Postman to test the APIs and ensure they are working correctly for CourseGenAI.
 - [ ] Setup Docker: Dockerize the CourseGenAI application to make it easier to deploy and manage across different environments.
 - [ ] Middleware (JWT, Static): Set up middleware for CourseGenAI, such as JWT (JSON Web Tokens) for authentication and Static Middleware for serving static assets.
   
