@@ -1,6 +1,7 @@
 version: '3'
 services:
   app:
+    build: .
     image: docker-app-quiz-islamic-ai
     ports:
       - "8080:8080"
