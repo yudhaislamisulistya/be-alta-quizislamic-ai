@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"log"
+	"os"
 	"project/model"
 
 	"github.com/joho/godotenv"
@@ -17,11 +18,11 @@ var (
 func InitDB() {
 
 	config := model.Config{
-		DB_Username: "root",
-		DB_Password: "",
-		DB_Port:     "3306",
-		DB_Host:     "localhost",
-		DB_Name:     "QuizIslamicAI",
+		DB_Username: os.Getenv("DB_USER"),
+		DB_Password: os.Getenv("DB_PASS"),
+		DB_Port:     os.Getenv("DB_PORT"),
+		DB_Host:     os.Getenv("DB_HOST"),
+		DB_Name:     os.Getenv("DB_NAME"),
 	}
 
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",

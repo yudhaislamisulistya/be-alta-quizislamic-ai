@@ -6,9 +6,9 @@ import (
 )
 
 func main() {
+	config.LoadDotEnv()
 	config.InitDB()
 	config.InitialMigration()
-	config.LoadDotEnv()
 	e := route.New()
 	e.Logger.Fatal(e.Start(":8080"))
 }
