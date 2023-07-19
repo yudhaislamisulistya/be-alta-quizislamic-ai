@@ -3,6 +3,7 @@ services:
   app:
     build: .
     image: docker-app-quiz-islamic-ai
+    command: sh -c 'echo "Hello $$URL_APP!"'
     ports:
       - "8080:8080"
     env_file:

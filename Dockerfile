@@ -10,5 +10,8 @@ COPY . .
 # Build proyek Golang
 RUN go build -o main .
 
+# Expose port 8080 to the outside world
+EXPOSE 8080
+
 # Command yang akan dijalankan ketika container dijalankan
 CMD ["./main"]
