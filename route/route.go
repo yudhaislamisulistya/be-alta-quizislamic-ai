@@ -23,21 +23,22 @@ func New() *echo.Echo {
 	e.GET("/users/verification-email", controller.VerificationEmailUserController)
 	eJwt.POST("/users/verification-email", controller.CreateVerificationEmailUserController)
 
-	e.POST("/quiz", controller.CreateQuizController)
+	e.POST("/questions", controller.CreateQuestionController)
 
-	// quiz category rest api
-	eJwt.GET("/quiz-categories", controller.GetQuizCategoriesController)
-	eJwt.GET("/quiz-categories/:id", controller.GetQuizCategoryController)
-	eJwt.POST("/quiz-categories", controller.CreateQuizCategoryController)
-	eJwt.PUT("/quiz-categories/:id", controller.UpdateQuizCategoryController)
-	eJwt.DELETE("/quiz-categories/:id", controller.DeleteQuizCategoryController)
+	// question category rest api
+	eJwt.GET("/questions-categories", controller.GetQuestionCategoriesController)
+	eJwt.GET("/questions-categories/:id", controller.GetQuestionCategoryController)
+	eJwt.POST("/questions-categories", controller.CreateQuestionCategoryController)
+	eJwt.PUT("/questions-categories/:id", controller.UpdateQuestionCategoryController)
+	eJwt.DELETE("/questions-categories/:id", controller.DeleteQuestionCategoryController)
 
 	// wallet rest api
 	eJwt.GET("/wallets", controller.GetWalletsController)
 	eJwt.GET("/wallets/:id", controller.GetWalletController)
-	// eJwt.POST("/wallets", controller.CreateWalletController)
-	// eJwt.PUT("/wallets/:id", controller.UpdateWalletController)
-	// eJwt.DELETE("/wallets/:id", controller.DeleteWalletController)
+	eJwt.POST("/wallets", controller.CreateWalletController)
+	eJwt.PUT("/wallets/:id", controller.UpdateWalletController)
+	eJwt.DELETE("/wallets/:id", controller.DeleteWalletController)
+	eJwt.POST("/wallets/send", controller.SendWalletController)
 
 	g := e.Group("/authentications")
 	g.POST("/login", controller.LoginAuthenticationController)

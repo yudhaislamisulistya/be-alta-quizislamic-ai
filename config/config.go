@@ -43,8 +43,8 @@ func InitDB() {
 func InitialMigration() {
 	DB.AutoMigrate(&model.User{})
 	DB.AutoMigrate(&model.ForgotPassword{})
-	DB.AutoMigrate(&model.Quiz{})
-	DB.AutoMigrate(&model.QuizCategory{})
+	DB.AutoMigrate(&model.Questions{})
+	DB.AutoMigrate(&model.QuestionCategory{})
 	DB.AutoMigrate(&model.Wallet{})
 }
 

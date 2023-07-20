@@ -28,4 +28,5 @@ type User struct {
 	TokenExpired       int64     `json:"token_expired" form:"token_expired" gorm:"default:null"`
 	TokenVerifiedEmail string    `json:"token_verified_email" form:"token_verified_email"`
 	IsVerifiedEmail    bool      `json:"is_verified_email" form:"is_verified_email" gorm:"default:false"`
+	AvailableWorkspace int       `json:"available_workspace" form:"available_workspace" gorm:"default:3"`
 }

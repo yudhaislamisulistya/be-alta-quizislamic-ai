@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"project/config"
 	"project/model"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -124,5 +125,81 @@ func DeleteWalletController(c echo.Context) error {
 		"code":    "200",
 		"message": "success delete wallet",
 		"data":    wallet,
+	})
+}
+
+func SendWalletController(c echo.Context) error {
+	walletSend := model.Wallet{}
+	walletReceive := model.Wallet{}
+	userIdSend := c.FormValue("user_id_send")
+	userIdReceive := c.FormValue("user_id_receive")
+	amount := c.FormValue("amount")
+
+	resultSend := config.DB.Where("user_id = ?", userIdSend).First(&walletSend)
+	errSend := resultSend.Error
+
+	if errSend != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Data Pengirim Tidak Ditemukan",
+		})
+	}
+
+	resultReceive := config.DB.Where("user_id = ?", userIdReceive).First(&walletReceive)
+	errReceive := resultReceive.Error
+
+	if errReceive != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Data Penerima Tidak Ditemukan",
+		})
+	}
+
+	amountInt, err := strconv.Atoi(amount)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	walletSend.Balance = walletSend.Balance - int64(amountInt)
+
+	if walletSend.Balance < 0 {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Saldo Tidak Mencukupi",
+		})
+	}
+
+	walletReceive.Balance = walletReceive.Balance + int64(amountInt)
+
+	resultSend = config.DB.Save(&walletSend)
+	errSend = resultSend.Error
+
+	if errSend != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errSend.Error(),
+		})
+	}
+
+	resultReceive = config.DB.Save(&walletReceive)
+	errReceive = resultReceive.Error
+
+	if errReceive != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errReceive.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":          "200",
+		"message":       "success send wallet",
+		"amountSend":    walletSend.Balance,
+		"walletSend":    walletSend,
+		"walletReceive": walletReceive,
 	})
 }
