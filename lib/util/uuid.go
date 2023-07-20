@@ -19,7 +19,6 @@ func GenerateUUID() uuid.UUID {
 
 func GetUserControllerByUUID(uuid string) interface{} {
 
-	fmt.Println("uuid", uuid)
 	if uuid == "" {
 		return map[string]string{
 			"code":    "500",

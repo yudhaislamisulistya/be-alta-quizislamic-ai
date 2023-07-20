@@ -43,6 +43,8 @@ func InitDB() {
 func InitialMigration() {
 	DB.AutoMigrate(&model.User{})
 	DB.AutoMigrate(&model.ForgotPassword{})
+	DB.AutoMigrate(&model.Quiz{})
+	DB.AutoMigrate(&model.QuizCategory{})
 }
 
 func LoadDotEnv() {

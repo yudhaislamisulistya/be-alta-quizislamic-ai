@@ -23,6 +23,15 @@ func New() *echo.Echo {
 	e.GET("/users/verification-email", controller.VerificationEmailUserController)
 	eJwt.POST("/users/verification-email", controller.CreateVerificationEmailUserController)
 
+	e.POST("/quiz", controller.CreateQuizController)
+
+	// quiz category rest api
+	eJwt.GET("/quiz-categories", controller.GetQuizCategoriesController)
+	eJwt.GET("/quiz-categories/:id", controller.GetQuizCategoryController)
+	eJwt.POST("/quiz-categories", controller.CreateQuizCategoryController)
+	eJwt.PUT("/quiz-categories/:id", controller.UpdateQuizCategoryController)
+	eJwt.DELETE("/quiz-categories/:id", controller.DeleteQuizCategoryController)
+
 	g := e.Group("/authentications")
 	g.POST("/login", controller.LoginAuthenticationController)
 	g.POST("/forgot-password", controller.ForgotPasswordController)
