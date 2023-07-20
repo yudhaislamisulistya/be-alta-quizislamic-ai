@@ -40,6 +40,20 @@ func New() *echo.Echo {
 	eJwt.DELETE("/wallets/:id", controller.DeleteWalletController)
 	eJwt.POST("/wallets/send", controller.SendWalletController)
 
+	// quiz rest api
+	eJwt.GET("/quizzes", controller.GetQuizzesController)
+	eJwt.GET("/quizzes/:id", controller.GetQuizController)
+	eJwt.POST("/quizzes", controller.CreateQuizController)
+	eJwt.PUT("/quizzes/:id", controller.UpdateQuizController)
+	eJwt.DELETE("/quizzes/:id", controller.DeleteQuizController)
+
+	// level rest api
+	eJwt.GET("levels", controller.GetLevelsController)
+	eJwt.GET("levels/:id", controller.GetLevelController)
+	eJwt.POST("levels", controller.CreateLevelController)
+	eJwt.PUT("levels/:id", controller.UpdateLevelController)
+	eJwt.DELETE("levels/:id", controller.DeleteLevelController)
+
 	g := e.Group("/authentications")
 	g.POST("/login", controller.LoginAuthenticationController)
 	g.POST("/forgot-password", controller.ForgotPasswordController)

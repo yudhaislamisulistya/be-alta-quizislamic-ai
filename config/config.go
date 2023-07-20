@@ -46,6 +46,8 @@ func InitialMigration() {
 	DB.AutoMigrate(&model.Questions{})
 	DB.AutoMigrate(&model.QuestionCategory{})
 	DB.AutoMigrate(&model.Wallet{})
+	DB.AutoMigrate(&model.Quiz{})
+	DB.AutoMigrate(&model.Level{})
 }
 
 func LoadDotEnv() {
