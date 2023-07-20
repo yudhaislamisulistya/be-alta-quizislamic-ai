@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"project/config"
+	"project/lib/database"
 	"project/lib/util"
 	"project/middleware"
 	"project/model"
@@ -267,6 +268,7 @@ func VerificationEmailUserController(c echo.Context) error {
 	user := model.User{}
 
 	result := config.DB.Where("token_verified_email = ?", token).First(&user)
+	userId := user.ID
 	err := result.Error
 
 	if err != nil {
@@ -294,10 +296,19 @@ func VerificationEmailUserController(c echo.Context) error {
 		})
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{
+	resultWallet, err := database.CreateWallet(uint(userId), 50)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Gagal Membuat Wallet",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    "200",
 		"message": "success verification email",
 		"token":   token,
+		"wallet":  resultWallet,
 	})
 }
 
