@@ -24,6 +24,7 @@ func New() *echo.Echo {
 	eJwt.POST("/users/verification-email", controller.CreateVerificationEmailUserController)
 
 	e.POST("/questions", controller.CreateQuestionController)
+	eJwt.GET("/questions/:user_id/:quiz_id", controller.GetByUserIDQuizIDQuestionController)
 
 	// question category rest api
 	eJwt.GET("/questions-categories", controller.GetQuestionCategoriesController)
@@ -43,6 +44,8 @@ func New() *echo.Echo {
 	// quiz rest api
 	eJwt.GET("/quizzes", controller.GetQuizzesController)
 	eJwt.GET("/quizzes/:id", controller.GetQuizController)
+	eJwt.GET("/quizzes/:user_id", controller.GetByUserIDQuizController)
+	eJwt.GET("/quizzes/:user_id/:quiz_id", controller.GetByUserIDUserQuizQuizController)
 	eJwt.POST("/quizzes", controller.CreateQuizController)
 	eJwt.PUT("/quizzes/:id", controller.UpdateQuizController)
 	eJwt.DELETE("/quizzes/:id", controller.DeleteQuizController)

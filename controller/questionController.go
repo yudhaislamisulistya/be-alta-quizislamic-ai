@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"project/config"
 	"project/lib/database"
+	v "project/lib/validator"
 	"project/model"
 	"strconv"
 	"strings"
@@ -14,11 +15,22 @@ import (
 
 func CreateQuestionController(c echo.Context) error {
 	userId := c.FormValue("user_id")
+	quizId := c.FormValue("quiz_id")
 	amount := c.FormValue("amount")
 	instruction := c.FormValue("instruction")
 	typeQuestion := c.FormValue("type")
 	question := model.Questions{}
 	c.Bind(&question)
+
+	_, errValidator := v.QuestionValidator(question)
+
+	if errValidator != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": errValidator.Error(),
+		})
+	}
+
 	questionData := ""
 	amountInt, err := strconv.Atoi(amount)
 	fmt.Println(amountInt)
@@ -35,13 +47,22 @@ func CreateQuestionController(c echo.Context) error {
 		})
 	}
 
-	// convert string to uint
 	userIdInt, errResultAtoi := strconv.Atoi(userId)
 
 	if errResultAtoi != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
 			"code":    "500",
-			"message": errResultAtoi.Error(),
+			"message": "error convert user id",
+		})
+	}
+
+	quizIdInt, errResultAtoiQuizID := strconv.Atoi(quizId)
+	fmt.Println("Quiz ID : ", quizIdInt)
+
+	if errResultAtoiQuizID != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "error convert quiz id",
 		})
 	}
 
@@ -137,6 +158,8 @@ func CreateQuestionController(c echo.Context) error {
 	}
 
 	question.Type = typeQuestion
+	question.UserID = userIdInt
+	question.QuizID = quizIdInt
 	result := config.DB.Save(&question)
 	errResult := result.Error
 
@@ -163,5 +186,34 @@ func CreateQuestionController(c echo.Context) error {
 		"data":         question,
 		"questionData": questionData,
 		"wallet":       resultUpdateWallet,
+	})
+}
+
+func GetByUserIDQuizIDQuestionController(c echo.Context) error {
+	userID := c.Param("user_id")
+	userQuizID := c.Param("quiz_id")
+	question := []model.Questions{}
+	result := config.DB.Where("user_id = ? AND user_quiz = ?", userID, userQuizID).Find(&question)
+	errResult := result.Error
+	len := result.RowsAffected
+
+	if errResult != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "error get question",
+		})
+	}
+
+	if len == 0 {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "question not found, please create question first",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get question",
+		"data":    question,
 	})
 }

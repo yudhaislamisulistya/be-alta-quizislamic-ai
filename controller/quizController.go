@@ -165,3 +165,62 @@ func DeleteQuizController(c echo.Context) error {
 		"data":    quiz,
 	})
 }
+
+func GetByUserIDQuizController(c echo.Context) error {
+	quiz := model.Quiz{}
+	userId := c.Param("user_id")
+
+	result := config.DB.Where("user_id = ?", userId).Find(&quiz)
+	err := result.Error
+	len := result.RowsAffected
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if len == 0 {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"code":    "404",
+			"message": "Data Not Found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get quiz",
+		"data":    quiz,
+	})
+}
+
+func GetByUserIDUserQuizQuizController(c echo.Context) error {
+	quiz := model.Quiz{}
+	userId := c.Param("user_id")
+	quizId := c.Param("quiz_id")
+
+	result := config.DB.Where("user_id = ? AND id = ?", userId, quizId).Find(&quiz)
+	err := result.Error
+	len := result.RowsAffected
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if len == 0 {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"code":    "404",
+			"message": "Data Not Found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get quiz",
+		"data":    quiz,
+	})
+}
