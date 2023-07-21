@@ -16,6 +16,7 @@ func New() *echo.Echo {
 	}))
 
 	eJwt.GET("/users", controller.GetUsersController)
+	eJwt.GET("/users/filter", controller.GetFilterUsersController)
 	eJwt.GET("/users/:id", controller.GetUserController)
 	e.POST("/users", controller.CreateUserController)
 	eJwt.PUT("/users/:id", controller.UpdateUserController)

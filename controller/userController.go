@@ -10,12 +10,15 @@ import (
 	"project/lib/util"
 	"project/middleware"
 	"project/model"
+	"strconv"
 	"time"
 
 	"github.com/labstack/echo/v4"
 )
 
 func GetUsersController(c echo.Context) error {
+	sort := c.FormValue("sort")
+	fmt.Println(sort)
 	users := []model.User{}
 	header := model.Header{}
 
@@ -49,7 +52,7 @@ func GetUsersController(c echo.Context) error {
 		})
 	}
 
-	result := config.DB.Find(&users)
+	result := config.DB.Order("id " + sort).Find(&users)
 	err := result.Error
 	len := result.RowsAffected
 
@@ -384,5 +387,39 @@ func CreateVerificationEmailUserController(c echo.Context) error {
 		"code":    "200",
 		"message": "success verification email",
 		"data":    user,
+	})
+}
+
+func GetFilterUsersController(c echo.Context) error {
+	isAdminStr := c.QueryParam("is_admin")
+	// convert isAdmin to bool type
+	isAdmin, err := strconv.ParseBool(isAdminStr)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "isAdmin harus berupa boolean",
+		})
+	}
+
+	resultIsAdmin, err := database.GetFilterIsAdminUsers(isAdmin)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Gagal Mendapatkan Filter User",
+		})
+	}
+
+	if resultIsAdmin == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get filter user",
+		"data":    resultIsAdmin,
 	})
 }
