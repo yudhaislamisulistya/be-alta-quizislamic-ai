@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"project/config"
+	"project/model"
 
 	"github.com/sashabaranov/go-openai"
 )
@@ -97,4 +99,39 @@ func OpenAICreateQuestion(typeQuestion string, amount int, instruction string) i
 		resultResponse += response.Choices[0].Delta.Content
 		fmt.Printf(response.Choices[0].Delta.Content)
 	}
+}
+
+func GetQuestions() (interface{}, error) {
+	questions := []model.Questions{}
+	result := config.DB.Find(&questions)
+	errResult := result.Error
+	len := result.RowsAffected
+
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+
+	return questions, nil
+}
+
+func GetByTypeQuestions(typeQuestions string) (interface{}, error) {
+	questions := []model.Questions{}
+	result := config.DB.Where("type = ?", typeQuestions).Find(&questions)
+	errResult := result.Error
+	len := result.RowsAffected
+
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+
+	return questions, nil
+
 }

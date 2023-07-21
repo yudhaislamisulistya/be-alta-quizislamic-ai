@@ -217,3 +217,52 @@ func GetByUserIDQuizIDQuestionController(c echo.Context) error {
 		"data":    question,
 	})
 }
+
+func GetQuestionsController(c echo.Context) error {
+	resultQuestions, err := database.GetQuestions()
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "error get questions",
+		})
+	}
+
+	if resultQuestions == int64(0) {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "questions not found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get questions",
+		"data":    resultQuestions,
+	})
+}
+
+func GetByTypeQuestionsController(c echo.Context) error {
+	typeQuestion := c.QueryParam("type")
+	resultTypeQuestions, err := database.GetByTypeQuestions(typeQuestion)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "error get questions",
+		})
+	}
+
+	if resultTypeQuestions == int64(0) {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "questions not found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get questions",
+		"data":    resultTypeQuestions,
+	})
+}

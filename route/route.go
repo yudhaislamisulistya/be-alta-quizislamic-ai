@@ -24,6 +24,8 @@ func New() *echo.Echo {
 	eJwt.POST("/users/verification-email", controller.CreateVerificationEmailUserController)
 
 	e.POST("/questions", controller.CreateQuestionController)
+	eJwt.GET("/questions", controller.GetQuestionsController)
+	eJwt.GET("/questions/all", controller.GetByTypeQuestionsController)
 	eJwt.GET("/questions/:user_id/:quiz_id", controller.GetByUserIDQuizIDQuestionController)
 
 	// question category rest api
