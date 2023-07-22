@@ -392,34 +392,115 @@ func CreateVerificationEmailUserController(c echo.Context) error {
 
 func GetFilterUsersController(c echo.Context) error {
 	isAdminStr := c.QueryParam("is_admin")
-	// convert isAdmin to bool type
-	isAdmin, err := strconv.ParseBool(isAdminStr)
-	if err != nil {
+	accountStatus := c.QueryParam("account_status")
+	isVerifiedEmailStr := c.QueryParam("is_verified_email")
+
+	activeQueryParams := 0
+
+	if isAdminStr != "" {
+		activeQueryParams++
+	}
+
+	if accountStatus != "" {
+		activeQueryParams++
+	}
+
+	if isVerifiedEmailStr != "" {
+		activeQueryParams++
+	}
+
+	if activeQueryParams > 1 {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"code":    "500",
-			"message": "isAdmin harus berupa boolean",
+			"message": "Hanya Bisa Memilih Satu Filter",
 		})
 	}
 
-	resultIsAdmin, err := database.GetFilterIsAdminUsers(isAdmin)
-
-	if err != nil {
+	if activeQueryParams == 0 || activeQueryParams == 3 {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"code":    "500",
-			"message": "Gagal Mendapatkan Filter User",
+			"message": "Harus Memilih Salah Satu Filter",
 		})
 	}
 
-	if resultIsAdmin == int64(0) {
-		return c.JSON(http.StatusOK, map[string]string{
-			"code":    "200",
-			"message": "Data Kosong",
-		})
+	var result interface{}
+	var err error
+
+	if isAdminStr != "" {
+		// convert isAdmin to bool type
+		isAdmin, errIsAdmin := strconv.ParseBool(isAdminStr)
+		if errIsAdmin != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{
+				"code":    "500",
+				"message": "isAdmin harus berupa boolean",
+			})
+		}
+
+		result, err = database.GetFilterIsAdminUsers(isAdmin)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{
+				"code":    "500",
+				"message": "Gagal Mendapatkan Filter User",
+			})
+		}
+
+		if result == int64(0) {
+			return c.JSON(http.StatusOK, map[string]string{
+				"code":    "200",
+				"message": "Data Kosong",
+			})
+		}
+	}
+
+	if accountStatus != "" {
+		result, err = database.GetFilterAccountStatusUsers(accountStatus)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{
+				"code":    "500",
+				"message": "Gagal Mendapatkan Filter User",
+			})
+		}
+
+		if result == int64(0) {
+			return c.JSON(http.StatusOK, map[string]string{
+				"code":    "200",
+				"message": "Data Kosong",
+			})
+		}
+	}
+
+	if isVerifiedEmailStr != "" {
+		// convert isVerifiedEmail to bool type
+		isVerifiedEmail, errIsVerifiedEmail := strconv.ParseBool(isVerifiedEmailStr)
+		if errIsVerifiedEmail != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{
+				"code":    "500",
+				"message": "isVerifiedEmail harus berupa boolean",
+			})
+		}
+
+		result, err = database.GetFilterIsEmailVerifiedUsers(isVerifiedEmail)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{
+				"code":    "500",
+				"message": "Gagal Mendapatkan Filter User",
+			})
+		}
+
+		if result == int64(0) {
+			return c.JSON(http.StatusOK, map[string]string{
+				"code":    "200",
+				"message": "Data Kosong",
+			})
+		}
 	}
 
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    "200",
 		"message": "success get filter user",
-		"data":    resultIsAdmin,
+		"data":    result,
 	})
 }
