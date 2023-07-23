@@ -30,3 +30,9 @@ type User struct {
 	IsVerifiedEmail    bool      `json:"is_verified_email" form:"is_verified_email" gorm:"default:false"`
 	AvailableWorkspace int       `json:"available_workspace" form:"available_workspace" gorm:"default:3"`
 }
+
+type PasswordChangeRequest struct {
+	OldPassword        string `json:"old_password" form:"old_password" validate:"required"`
+	NewPassword        string `json:"new_password" form:"new_password" validate:"required,min=8,max=20"`
+	ConfirmNewPassword string `json:"confirm_new_password" form:"confirm_new_password" validate:"required,min=8,max=20"`
+}

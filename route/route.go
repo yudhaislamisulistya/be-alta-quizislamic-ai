@@ -15,8 +15,20 @@ func New() *echo.Echo {
 		SigningKey: []byte(constant.SECRET_JWT),
 	}))
 
+	// user rest api
+
 	eJwt.GET("/users", controller.GetUsersController)
+	eJwt.PUT("/users/:id/password", controller.UpdatePasswordUserController)
 	eJwt.GET("/users/filter", controller.GetFilterUsersController)
+	eJwt.GET("/users/gender/:gender", controller.GetByGenderUsersController)
+	eJwt.GET("/users/method/:method", controller.GetByRegistrationMethodUserController)
+	eJwt.GET("/users/verified-email/:status", controller.GetByVerifiedEmailStatusUsersController)
+	eJwt.GET("/users/birth-year/:year", controller.GetByBirthYearUsersController)
+	eJwt.GET("/users/empty-profile-photo", controller.GetEmptyProfilePhotoUsersController)
+	eJwt.GET("/users/token-expired", controller.GetTokenExpiredUsersController)
+	eJwt.GET("/users/token-verified-email/:token", controller.GetTokenVerifiedEmailUsersController)
+	eJwt.GET("/users/joined-date-range", controller.GetJoinedDateRangeUsersController)
+	eJwt.GET("/users/search", controller.GetSearchUsersController)
 	eJwt.GET("/users/:id", controller.GetUserController)
 	e.POST("/users", controller.CreateUserController)
 	eJwt.PUT("/users/:id", controller.UpdateUserController)

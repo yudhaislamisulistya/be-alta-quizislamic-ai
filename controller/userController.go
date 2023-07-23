@@ -504,3 +504,280 @@ func GetFilterUsersController(c echo.Context) error {
 		"data":    result,
 	})
 }
+
+func UpdatePasswordUserController(c echo.Context) error {
+
+	id := c.Param("id")
+
+	// parse id to int
+	idInt, errIdInt := strconv.Atoi(id)
+	if errIdInt != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "id harus berupa integer",
+		})
+	}
+
+	reqPasswordChange := model.PasswordChangeRequest{}
+
+	c.Bind(&reqPasswordChange)
+
+	user := model.User{}
+	resultUpdatePassword, errUpdatePassword := database.UpdatePasswordUser(&user, idInt, &reqPasswordChange)
+
+	if errUpdatePassword != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errUpdatePassword.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success update password user",
+		"data":    resultUpdatePassword,
+	})
+}
+
+func GetByGenderUsersController(c echo.Context) error {
+	gender := c.Param("gender")
+	users := []model.User{}
+
+	result, err := database.GetByGenderUsers(&users, gender)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Gagal Mendapatkan Filter User",
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data by gender",
+		"data":    result,
+	})
+}
+
+func GetByRegistrationMethodUserController(c echo.Context) error {
+	method := c.Param("method")
+	fmt.Println(method)
+	users := []model.User{}
+
+	result, err := database.GetByRegistrationMethodUsers(&users, method)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Gagal Mendapatkan Filter User",
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data by registration method",
+		"data":    result,
+	})
+}
+
+func GetByVerifiedEmailStatusUsersController(c echo.Context) error {
+	verifiedEmailStatus := c.Param("status")
+	users := []model.User{}
+
+	result, err := database.GetByVerifiedEmailStatusUsers(&users, verifiedEmailStatus)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data by verified email status",
+		"data":    result,
+	})
+}
+
+func GetByBirthYearUsersController(c echo.Context) error {
+	year := c.Param("year")
+	users := []model.User{}
+
+	result, err := database.GetByBirthYearUsers(&users, year)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Gagal Mendapatkan Filter User",
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data by birth date",
+		"data":    result,
+	})
+}
+
+func GetEmptyProfilePhotoUsersController(c echo.Context) error {
+	users := []model.User{}
+
+	result, err := database.GetEmptyProfilePhotoUsers(&users)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Gagal Mendapatkan Filter User",
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data empty profile photo",
+		"data":    result,
+	})
+}
+
+func GetTokenExpiredUsersController(c echo.Context) error {
+	users := []model.User{}
+
+	result, err := database.GetTokenExpiredUsers(&users)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Gagal Mendapatkan Filter User",
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data token expired",
+		"data":    result,
+	})
+}
+
+func GetTokenVerifiedEmailUsersController(c echo.Context) error {
+	token := c.Param("token")
+	users := []model.User{}
+
+	result, err := database.GetTokenVerifiedEmailUsers(&users, token)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": "Gagal Mendapatkan Filter User",
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data token verified email",
+		"data":    result,
+	})
+}
+
+func GetJoinedDateRangeUsersController(c echo.Context) error {
+	startDate := c.QueryParam("start_date")
+	endDate := c.QueryParam("end_date")
+	users := []model.User{}
+
+	result, err := database.GetJoinedDateRangeUsers(&users, startDate, endDate)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data joined date range",
+		"data":    result,
+	})
+}
+
+func GetSearchUsersController(c echo.Context) error {
+	keyword := c.QueryParam("keyword")
+	users := []model.User{}
+
+	result, err := database.GetSearchUsers(&users, keyword)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data search",
+		"data":    result,
+	})
+}
