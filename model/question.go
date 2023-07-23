@@ -12,4 +12,5 @@ type Questions struct {
 	Options  string `json:"options,omitempty" form:"options,omitempty"`
 	Answer   string `json:"answer,omitempty" form:"answer,omitempty"`
 	IsTrue   int    `json:"is_true"`
+	Point    int    `json:"point" form:"point" validate:"required" gorm:"default:10"`
 }

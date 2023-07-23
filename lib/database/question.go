@@ -8,6 +8,7 @@ import (
 	"os"
 	"project/config"
 	"project/model"
+	"strconv"
 
 	"github.com/sashabaranov/go-openai"
 )
@@ -134,4 +135,133 @@ func GetByTypeQuestions(typeQuestions string) (interface{}, error) {
 
 	return questions, nil
 
+}
+
+func CreateQuestionByMultipleChoice(userId string, quizId string, question string, optionsA string, optionsB string, optionsC string, optionsD string, answer string, point string) (interface{}, error) {
+
+	userIdInt, errUserIdInt := strconv.Atoi(userId)
+	if errUserIdInt != nil {
+		return nil, errors.New("user id should be integer")
+	}
+
+	quizIdInt, errQuizIdInt := strconv.Atoi(quizId)
+	if errQuizIdInt != nil {
+		return nil, errors.New("quiz id should be integer")
+	}
+
+	pointInt, errPointInt := strconv.Atoi(point)
+	if errPointInt != nil {
+		return nil, errors.New("point should be integer")
+	}
+
+	options := optionsA + "\n" + optionsB + "\n" + optionsC + "\n" + optionsD + "\nJawaban: " + answer
+
+	questionData := model.Questions{
+		UserID:   userIdInt,
+		QuizID:   quizIdInt,
+		Question: question,
+		Type:     "multiple_choice",
+		Options:  options,
+		Answer:   "-",
+		IsTrue:   9,
+		Point:    pointInt,
+	}
+
+	result := config.DB.Create(&questionData)
+	errResult := result.Error
+
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	return questionData, nil
+}
+
+func CreateQuestionByTrueFalse(userId string, quizId string, question string, isTrue string, point string) (interface{}, error) {
+
+	userIdInt, errUserIdInt := strconv.Atoi(userId)
+	if errUserIdInt != nil {
+		return nil, errors.New("user id should be integer")
+	}
+
+	quizIdInt, errQuizIdInt := strconv.Atoi(quizId)
+	if errQuizIdInt != nil {
+		return nil, errors.New("quiz id should be integer")
+	}
+
+	if isTrue == "true" {
+		isTrue = "1"
+	} else if isTrue == "false" {
+		isTrue = "0"
+	} else {
+		return nil, errors.New("is true should be true or false")
+	}
+
+	isTrueInt, errIsTrueInt := strconv.Atoi(isTrue)
+	if errIsTrueInt != nil {
+		return nil, errors.New("is true should be integer")
+	}
+
+	pointInt, errPointInt := strconv.Atoi(point)
+	if errPointInt != nil {
+		return nil, errors.New("point should be integer")
+	}
+
+	questionData := model.Questions{
+		UserID:   userIdInt,
+		QuizID:   quizIdInt,
+		Question: question,
+		Type:     "true_false",
+		Options:  "-",
+		Answer:   "-",
+		IsTrue:   isTrueInt,
+		Point:    pointInt,
+	}
+
+	result := config.DB.Create(&questionData)
+	errResult := result.Error
+
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	return questionData, nil
+}
+
+func CreateQuestionByFillIn(userId string, quizId string, question string, answer string, point string) (interface{}, error) {
+
+	userIdInt, errUserIdInt := strconv.Atoi(userId)
+	if errUserIdInt != nil {
+		return nil, errors.New("user id should be integer")
+	}
+
+	quizIdInt, errQuizIdInt := strconv.Atoi(quizId)
+	if errQuizIdInt != nil {
+		return nil, errors.New("quiz id should be integer")
+	}
+
+	pointInt, errPointInt := strconv.Atoi(point)
+	if errPointInt != nil {
+		return nil, errors.New("point should be integer")
+	}
+
+	questionData := model.Questions{
+		UserID:   userIdInt,
+		QuizID:   quizIdInt,
+		Question: question,
+		Type:     "fill_in",
+		Options:  "-",
+		Answer:   answer,
+		IsTrue:   9,
+		Point:    pointInt,
+	}
+
+	result := config.DB.Create(&questionData)
+	errResult := result.Error
+
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	return questionData, nil
 }

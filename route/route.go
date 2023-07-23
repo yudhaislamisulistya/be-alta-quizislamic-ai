@@ -37,6 +37,9 @@ func New() *echo.Echo {
 	eJwt.POST("/users/verification-email", controller.CreateVerificationEmailUserController)
 
 	e.POST("/questions", controller.CreateQuestionController)
+	e.POST("/questions/multiple-choice", controller.CreateQuestionByMultipleChoiceController)
+	e.POST("/questions/true-false", controller.CreateQuestionByTrueFalseController)
+	e.POST("/questions/fill-in", controller.CreateQuestionByFillInController)
 	eJwt.GET("/questions", controller.GetQuestionsController)
 	eJwt.GET("/questions/all", controller.GetByTypeQuestionsController)
 	eJwt.GET("/questions/:user_id/:quiz_id", controller.GetByUserIDQuizIDQuestionController)

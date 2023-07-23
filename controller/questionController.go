@@ -266,3 +266,107 @@ func GetByTypeQuestionsController(c echo.Context) error {
 		"data":    resultTypeQuestions,
 	})
 }
+
+func CreateQuestionByMultipleChoiceController(c echo.Context) error {
+	userId := c.FormValue("user_id")
+	quizId := c.FormValue("quiz_id")
+	question := c.FormValue("question")
+	optionsA := c.FormValue("options_a")
+	optionsB := c.FormValue("options_b")
+	optionsC := c.FormValue("options_c")
+	optionsD := c.FormValue("options_d")
+	correctAnswer := c.FormValue("correct_answer")
+	point := c.FormValue("point")
+
+	fmt.Println("User ID : ", userId)
+	fmt.Println("Quiz ID : ", quizId)
+	fmt.Println("Question : ", question)
+	fmt.Println("Options A : ", optionsA)
+	fmt.Println("Options B : ", optionsB)
+	fmt.Println("Options C : ", optionsC)
+	fmt.Println("Options D : ", optionsD)
+	fmt.Println("Correct Answer : ", correctAnswer)
+	fmt.Println("Point : ", point)
+
+	// check all field is not empty
+	if userId == "" || quizId == "" || question == "" || optionsA == "" || optionsB == "" || optionsC == "" || optionsD == "" || correctAnswer == "" || point == "" {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "all field is required",
+		})
+	}
+
+	result, err := database.CreateQuestionByMultipleChoice(userId, quizId, question, optionsA, optionsB, optionsC, optionsD, correctAnswer, point)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusCreated, map[string]interface{}{
+		"code":    "201",
+		"message": "success create question",
+		"data":    result,
+	})
+}
+
+func CreateQuestionByTrueFalseController(c echo.Context) error {
+	userId := c.FormValue("user_id")
+	quizId := c.FormValue("quiz_id")
+	question := c.FormValue("question")
+	isTrue := c.FormValue("is_true")
+	point := c.FormValue("point")
+
+	if userId == "" || quizId == "" || question == "" || isTrue == "" || point == "" {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "all field is required",
+		})
+	}
+
+	result, err := database.CreateQuestionByTrueFalse(userId, quizId, question, isTrue, point)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	return c.JSON(http.StatusCreated, map[string]interface{}{
+		"code":    "201",
+		"message": "success create question",
+		"data":    result,
+	})
+}
+
+func CreateQuestionByFillInController(c echo.Context) error {
+	userId := c.FormValue("user_id")
+	quizId := c.FormValue("quiz_id")
+	question := c.FormValue("question")
+	answer := c.FormValue("answer")
+	point := c.FormValue("point")
+
+	if userId == "" || quizId == "" || question == "" || answer == "" || point == "" {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "all field is required",
+		})
+	}
+
+	result, err := database.CreateQuestionByFillIn(userId, quizId, question, answer, point)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+	return c.JSON(http.StatusCreated, map[string]interface{}{
+		"code":    "201",
+		"message": "success create question",
+		"data":    result,
+	})
+}
