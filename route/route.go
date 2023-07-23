@@ -72,6 +72,13 @@ func New() *echo.Echo {
 	eJwt.PUT("levels/:id", controller.UpdateLevelController)
 	eJwt.DELETE("levels/:id", controller.DeleteLevelController)
 
+	// package rest api
+	eJwt.GET("/packages", controller.GetPackagesController)
+	eJwt.GET("/packages/:id", controller.GetPackageController)
+	eJwt.POST("/packages", controller.CreatePackageController)
+	eJwt.PUT("/packages/:id", controller.UpdatePackageController)
+	eJwt.DELETE("/packages/:id", controller.DeletePackageController)
+
 	g := e.Group("/authentications")
 	g.POST("/login", controller.LoginAuthenticationController)
 	g.POST("/forgot-password", controller.ForgotPasswordController)
