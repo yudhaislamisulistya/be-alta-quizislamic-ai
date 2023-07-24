@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 	"project/config"
+	"project/lib/database"
 	"project/model"
 
 	"github.com/labstack/echo/v4"
@@ -136,5 +137,115 @@ func DeleteQuestionCategoryController(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    "200",
 		"message": "success",
+	})
+}
+
+func GetByNameQuestionCategoryController(c echo.Context) error {
+	name := c.Param("name")
+	questionCategories := []model.QuestionCategory{}
+
+	result, err := database.GetByNameQuestionCategory(&questionCategories, name)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success",
+		"data":    questionCategories,
+	})
+}
+
+func GetSearchQuestionCategoriesController(c echo.Context) error {
+	search := c.QueryParam("keyword")
+	questionCategories := []model.QuestionCategory{}
+
+	result, err := database.GetSearchQuestionCategories(&questionCategories, search)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success",
+		"data":    questionCategories,
+	})
+}
+
+func GetSortQuestionCategoriesController(c echo.Context) error {
+	by := c.QueryParam("sort_by")
+	order := c.QueryParam("order")
+	questionCatgeories := []model.QuestionCategory{}
+
+	result, err := database.GetSortQuestionCategories(&questionCatgeories, by, order)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]string{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success",
+		"data":    questionCatgeories,
+	})
+}
+
+func GetPaginationQuestionCategoriesController(c echo.Context) error {
+	page := c.QueryParam("page")
+	limit := c.QueryParam("limit")
+	questionCategories := []model.QuestionCategory{}
+
+	result, err := database.GetPaginationQuestionCategories(&questionCategories, page, limit)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success",
+		"data":    questionCategories,
 	})
 }

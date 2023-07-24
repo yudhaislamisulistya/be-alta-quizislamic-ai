@@ -46,6 +46,10 @@ func New() *echo.Echo {
 
 	// question category rest api
 	eJwt.GET("/questions-categories", controller.GetQuestionCategoriesController)
+	eJwt.GET("/questions-categories/name/:name", controller.GetByNameQuestionCategoryController)
+	eJwt.GET("/questions-categories/search", controller.GetSearchQuestionCategoriesController)
+	eJwt.GET("/questions-categories/sort", controller.GetSortQuestionCategoriesController)
+	eJwt.GET("/questions-categories/pagination", controller.GetPaginationQuestionCategoriesController)
 	eJwt.GET("/questions-categories/:id", controller.GetQuestionCategoryController)
 	eJwt.POST("/questions-categories", controller.CreateQuestionCategoryController)
 	eJwt.PUT("/questions-categories/:id", controller.UpdateQuestionCategoryController)
