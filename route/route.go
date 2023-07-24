@@ -67,6 +67,9 @@ func New() *echo.Echo {
 
 	// quiz rest api
 	eJwt.GET("/quizzes", controller.GetQuizzesController)
+	eJwt.GET("/quizzes/search", controller.GetSearchQuizzesController)
+	eJwt.GET("/quizzes/pagination", controller.GetPaginationQuizzesController)
+	eJwt.GET("/quizzes/sort", controller.GetSortQuizzesController)
 	eJwt.GET("/quizzes/:id", controller.GetQuizController)
 	eJwt.GET("/quizzes/:user_id", controller.GetByUserIDQuizController)
 	eJwt.GET("/quizzes/:user_id/:quiz_id", controller.GetByUserIDUserQuizQuizController)

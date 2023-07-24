@@ -3,6 +3,7 @@ package controller
 import (
 	"net/http"
 	"project/config"
+	"project/lib/database"
 	"project/lib/util"
 	"project/model"
 
@@ -221,6 +222,89 @@ func GetByUserIDUserQuizQuizController(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]interface{}{
 		"code":    "200",
 		"message": "success get quiz",
+		"data":    quiz,
+	})
+}
+
+func GetPaginationQuizzesController(c echo.Context) error {
+	page := c.QueryParam("page")
+	limit := c.QueryParam("limit")
+	quiz := []model.Quiz{}
+
+	result, err := database.GetPaginationQuizzes(&quiz, page, limit)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"code":    "404",
+			"message": "Data Not Found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get pagination quiz",
+		"data":    quiz,
+	})
+}
+
+func GetSortQuizzesController(c echo.Context) error {
+	sortBy := c.QueryParam("sort_by")
+	order := c.QueryParam("order")
+	quiz := []model.Quiz{}
+
+	result, err := database.GetSortQuizzes(&quiz, sortBy, order)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"code":    "404",
+			"message": "Data Not Found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get sort quiz",
+		"data":    quiz,
+	})
+}
+
+func GetSearchQuizzesController(c echo.Context) error {
+	keyword := c.QueryParam("keyword")
+	quiz := []model.Quiz{}
+
+	result, err := database.GetSearchQuizzes(&quiz, keyword)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"code":    "404",
+			"message": "Data Not Found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get search quiz",
 		"data":    quiz,
 	})
 }
