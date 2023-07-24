@@ -1,8 +1,10 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 	"project/config"
+	"project/lib/database"
 	"project/model"
 	"strconv"
 
@@ -201,5 +203,66 @@ func SendWalletController(c echo.Context) error {
 		"amountSend":    walletSend.Balance,
 		"walletSend":    walletSend,
 		"walletReceive": walletReceive,
+	})
+}
+
+func GetPaginationWalletController(c echo.Context) error {
+	page := c.QueryParam("page")
+	limit := c.QueryParam("limit")
+	wallets := []model.Wallet{}
+
+	result, err := database.GetPaginationWallet(&wallets, page, limit)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get pagination wallet",
+		"data":    wallets,
+	})
+}
+
+func GetSortWalletController(c echo.Context) error {
+	sortBy := c.QueryParam("sort_by")
+	order := c.QueryParam("order")
+	wallets := []model.Wallet{}
+
+	fmt.Println(sortBy)
+	fmt.Println(order)
+
+	result, err := database.GetSortWallet(&wallets, sortBy, order)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get sort wallet",
+		"data":    wallets,
 	})
 }

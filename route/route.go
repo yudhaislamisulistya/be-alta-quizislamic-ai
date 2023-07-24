@@ -57,6 +57,8 @@ func New() *echo.Echo {
 
 	// wallet rest api
 	eJwt.GET("/wallets", controller.GetWalletsController)
+	eJwt.GET("/wallets/pagination", controller.GetPaginationWalletController)
+	eJwt.GET("/wallets/sort", controller.GetSortWalletController)
 	eJwt.GET("/wallets/:id", controller.GetWalletController)
 	eJwt.POST("/wallets", controller.CreateWalletController)
 	eJwt.PUT("/wallets/:id", controller.UpdateWalletController)
