@@ -113,3 +113,62 @@ func DeletePackage(packageData *model.Package, id string) (interface{}, error) {
 
 	return packageData, nil
 }
+
+func GetSearchPackages(packages *[]model.Package, keyword string) (interface{}, error) {
+	result := config.DB.Where("name LIKE ?", "%"+keyword+"%").Find(&packages)
+	err := result.Error
+	len := result.RowsAffected
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+
+	return packages, nil
+}
+
+func GetPaginationPackages(packages *[]model.Package, page string, limit string) (interface{}, error) {
+	pageInt, errPageInt := strconv.Atoi(page)
+	if errPageInt != nil {
+		return nil, errors.New("page must be a number")
+	}
+
+	limitInt, errLimitInt := strconv.Atoi(limit)
+	if errLimitInt != nil {
+		return nil, errors.New("limit must be a number")
+	}
+
+	offset := (pageInt - 1) * limitInt
+	result := config.DB.Offset(offset).Limit(limitInt).Find(&packages)
+	err := result.Error
+	len := result.RowsAffected
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+
+	return packages, nil
+}
+
+func GetSortPackages(packages *[]model.Package, sortBy string, order string) (interface{}, error) {
+	result := config.DB.Order(sortBy + " " + order).Find(&packages)
+	err := result.Error
+	len := result.RowsAffected
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+
+	return packages, nil
+}

@@ -144,3 +144,89 @@ func DeletePackageController(c echo.Context) error {
 		"data":    result,
 	})
 }
+
+func GetSearchPackagesController(c echo.Context) error {
+	keyword := c.QueryParam("keyword")
+	packages := []model.Package{}
+
+	result, err := database.GetSearchPackages(&packages, keyword)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "failed get search packages",
+			"error":   err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"code":    "404",
+			"message": "packages not found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get search packages",
+		"data":    packages,
+	})
+}
+
+func GetPaginationPackagesController(c echo.Context) error {
+	page := c.QueryParam("page")
+	limt := c.QueryParam("limit")
+	packages := []model.Package{}
+
+	result, err := database.GetPaginationPackages(&packages, page, limt)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "failed get pagination packages",
+			"error":   err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"code":    "404",
+			"message": "packages not found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get pagination packages",
+		"data":    packages,
+	})
+}
+
+func GetSortPackagesController(c echo.Context) error {
+	sortBy := c.QueryParam("sort_by")
+	order := c.QueryParam("order")
+	packages := []model.Package{}
+
+	result, err := database.GetSortPackages(&packages, sortBy, order)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": "failed get sort packages",
+			"error":   err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"code":    "404",
+			"message": "packages not found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get sort packages",
+		"data":    packages,
+	})
+}

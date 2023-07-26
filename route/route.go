@@ -94,6 +94,9 @@ func New() *echo.Echo {
 
 	// package rest api
 	eJwt.GET("/packages", controller.GetPackagesController)
+	eJwt.GET("/packages/search", controller.GetSearchPackagesController)
+	eJwt.GET("/packages/pagination", controller.GetPaginationPackagesController)
+	eJwt.GET("/packages/sort", controller.GetSortPackagesController)
 	eJwt.GET("/packages/:id", controller.GetPackageController)
 	eJwt.POST("/packages", controller.CreatePackageController)
 	eJwt.PUT("/packages/:id", controller.UpdatePackageController)
