@@ -160,3 +160,88 @@ func DeleteLevelController(c echo.Context) error {
 		"data":    result,
 	})
 }
+
+func GetSearchLevelsController(c echo.Context) error {
+	keyword := c.QueryParam("keyword")
+	levels := []model.Level{}
+
+	result, err := database.GetSearchLevels(&levels, keyword)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
+			"code":    "404",
+			"message": "Data Not Found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Get Search Levels",
+		"code":    "200",
+		"data":    levels,
+	})
+}
+
+func GetPaginationLevelsController(c echo.Context) error {
+	page := c.QueryParam("page")
+	limit := c.QueryParam("limit")
+	levels := []model.Level{}
+
+	result, err := database.GetPaginationLevels(&levels, page, limit)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+
+	}
+
+	if result == int64(0) {
+		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
+			"code":    "404",
+			"message": "Data Not Found",
+		})
+
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Get Pagination Levels",
+		"code":    "200",
+		"data":    levels,
+	})
+}
+
+func GetSortLevelsController(c echo.Context) error {
+	sortBy := c.QueryParam("sort_by")
+	order := c.QueryParam("order")
+	level := []model.Level{}
+
+	result, err := database.GetSortLevels(&level, sortBy, order)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, map[string]interface{}{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return echo.NewHTTPError(http.StatusNotFound, map[string]interface{}{
+			"code":    "404",
+			"message": "Data Not Found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "Get Sort Levels",
+		"code":    "200",
+		"data":    level,
+	})
+}

@@ -84,6 +84,9 @@ func New() *echo.Echo {
 
 	// level rest api
 	eJwt.GET("levels", controller.GetLevelsController)
+	eJwt.GET("levels/search", controller.GetSearchLevelsController)
+	eJwt.GET("levels/pagination", controller.GetPaginationLevelsController)
+	eJwt.GET("levels/sort", controller.GetSortLevelsController)
 	eJwt.GET("levels/:id", controller.GetLevelController)
 	eJwt.POST("levels", controller.CreateLevelController)
 	eJwt.PUT("levels/:id", controller.UpdateLevelController)
