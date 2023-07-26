@@ -265,3 +265,62 @@ func CreateQuestionByFillIn(userId string, quizId string, question string, answe
 
 	return questionData, nil
 }
+
+func GetSearchQuestions(questions *[]model.Questions, keyword string) (interface{}, error) {
+	result := config.DB.Where("question LIKE ?", "%"+keyword+"%").Find(&questions)
+	errResult := result.Error
+	len := result.RowsAffected
+
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+
+	return questions, nil
+}
+
+func GetSortQuestions(questions *[]model.Questions, sortBy string, order string) (interface{}, error) {
+	result := config.DB.Order(sortBy + " " + order).Find(&questions)
+	errResult := result.Error
+	len := result.RowsAffected
+
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+
+	return questions, nil
+}
+
+func GetPaginationQuestions(questions *[]model.Questions, page string, limit string) (interface{}, error) {
+	pageInt, errPageInt := strconv.Atoi(page)
+	if errPageInt != nil {
+		return nil, errors.New("page should be integer")
+	}
+
+	limitInt, errLimitInt := strconv.Atoi(limit)
+	if errLimitInt != nil {
+		return nil, errors.New("limit should be integer")
+	}
+
+	offset := (pageInt - 1) * limitInt
+	result := config.DB.Offset(offset).Limit(limitInt).Find(&questions)
+	errResult := result.Error
+	len := result.RowsAffected
+
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+
+	return questions, nil
+}

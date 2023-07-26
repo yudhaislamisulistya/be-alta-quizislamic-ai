@@ -370,3 +370,86 @@ func CreateQuestionByFillInController(c echo.Context) error {
 		"data":    result,
 	})
 }
+
+func GetSearchQuestionsController(c echo.Context) error {
+	keyword := c.QueryParam("keyword")
+	questions := []model.Questions{}
+
+	result, err := database.GetSearchQuestions(&questions, keyword)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data search",
+		"data":    result,
+	})
+}
+
+func GetSortQuestionsController(c echo.Context) error {
+	sortBy := c.QueryParam("sort_by")
+	order := c.QueryParam("order")
+	questions := []model.Questions{}
+
+	result, err := database.GetSortQuestions(&questions, sortBy, order)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data sort",
+		"data":    result,
+	})
+}
+
+func GetPaginationQuestionsController(c echo.Context) error {
+	page := c.QueryParam("page")
+	limit := c.QueryParam("limit")
+	questions := []model.Questions{}
+
+	result, err := database.GetPaginationQuestions(&questions, page, limit)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data pagination",
+		"data":    result,
+	})
+}

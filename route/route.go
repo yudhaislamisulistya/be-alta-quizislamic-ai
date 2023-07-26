@@ -29,6 +29,8 @@ func New() *echo.Echo {
 	eJwt.GET("/users/token-verified-email/:token", controller.GetTokenVerifiedEmailUsersController)
 	eJwt.GET("/users/joined-date-range", controller.GetJoinedDateRangeUsersController)
 	eJwt.GET("/users/search", controller.GetSearchUsersController)
+	eJwt.GET("/users/sort", controller.GetSortUsersController)
+	eJwt.GET("/users/pagination", controller.GetPaginationUsersController)
 	eJwt.GET("/users/:id", controller.GetUserController)
 	e.POST("/users", controller.CreateUserController)
 	eJwt.PUT("/users/:id", controller.UpdateUserController)
@@ -41,6 +43,9 @@ func New() *echo.Echo {
 	e.POST("/questions/true-false", controller.CreateQuestionByTrueFalseController)
 	e.POST("/questions/fill-in", controller.CreateQuestionByFillInController)
 	eJwt.GET("/questions", controller.GetQuestionsController)
+	eJwt.GET("/questions/search", controller.GetSearchQuestionsController)
+	eJwt.GET("/questions/sort", controller.GetSortQuestionsController)
+	eJwt.GET("/questions/pagination", controller.GetPaginationQuestionsController)
 	eJwt.GET("/questions/all", controller.GetByTypeQuestionsController)
 	eJwt.GET("/questions/:user_id/:quiz_id", controller.GetByUserIDQuizIDQuestionController)
 

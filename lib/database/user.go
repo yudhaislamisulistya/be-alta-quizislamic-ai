@@ -298,3 +298,48 @@ func GetSearchUsers(users *[]model.User, keyword string) (interface{}, error) {
 
 	return users, nil
 }
+
+func GetSortUsers(users *[]model.User, sortBy string, order string) (interface{}, error) {
+	result := config.DB.Order(sortBy + " " + order).Find(&users)
+	errResult := result.Error
+	len := result.RowsAffected
+
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+
+	return users, nil
+}
+
+func GetPaginationUsers(users *[]model.User, page string, limit string) (interface{}, error) {
+
+	// parse string to int
+	pageInt, errParsePage := strconv.Atoi(page)
+	if errParsePage != nil {
+		return nil, errors.New("page must be number")
+	}
+
+	limitInt, errParseLimit := strconv.Atoi(limit)
+	if errParseLimit != nil {
+		return nil, errors.New("limit must be number")
+	}
+
+	offset := (pageInt - 1) * limitInt
+	result := config.DB.Limit(limitInt).Offset(offset).Find(&users)
+	errResult := result.Error
+	len := result.RowsAffected
+
+	if errResult != nil {
+		return nil, errResult
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+
+	return users, nil
+}

@@ -781,3 +781,60 @@ func GetSearchUsersController(c echo.Context) error {
 		"data":    result,
 	})
 }
+
+func GetSortUsersController(c echo.Context) error {
+	sortBy := c.QueryParam("sort_by")
+	order := c.QueryParam("order")
+	users := []model.User{}
+
+	result, err := database.GetSortUsers(&users, sortBy, order)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data sort",
+		"data":    result,
+	})
+
+}
+
+func GetPaginationUsersController(c echo.Context) error {
+	page := c.QueryParam("page")
+	limit := c.QueryParam("limit")
+	users := []model.User{}
+
+	result, err := database.GetPaginationUsers(&users, page, limit)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": err.Error(),
+		})
+	}
+
+	if result == nil {
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    "200",
+			"message": "Data Kosong",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    "200",
+		"message": "success get data pagination",
+		"data":    result,
+	})
+}
