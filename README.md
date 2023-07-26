@@ -23,10 +23,10 @@ QuizIslamicAI is a Golang-based project that aims to revolutionize the learning 
   
 ## Pertemuan 3
 - [x] Live di AWS: Deploy QuizIslamicAI live on AWS (Amazon Web Services) to make the application accessible to users over the internet.
-- [ ] Continue Rest API: Continue working on the Rest API to enhance its functionality and make it more robust.
+- [x] Continue Rest API: Continue working on the Rest API to enhance its functionality and make it more robust.
 
 ## Nice To Have (Optional)
-- [ ] Pagination: Implement pagination in QuizIslamicAI to efficiently handle large amounts of data and improve user experience.
+- [x] Pagination: Implement pagination in QuizIslamicAI to efficiently handle large amounts of data and improve user experience.
 - [ ] Docs: Create comprehensive documentation for QuizIslamicAI, including API documentation and guidelines for developers who want to contribute to the project.
 
 Please update this checklist as you make progress in the project. You can check off the tasks that are completed, and add any additional tasks or notes as needed. Happy developing CourseGenAI!
