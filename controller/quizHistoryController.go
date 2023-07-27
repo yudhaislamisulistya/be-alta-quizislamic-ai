@@ -241,3 +241,59 @@ func GetPaginationQuizHistoriesController(c echo.Context) error {
 		"data":    quizHistories,
 	})
 }
+
+func GetScoreQuizHistoriesController(c echo.Context) error {
+	data := c.QueryParam("data")
+	score := c.QueryParam("score")
+	quizHistories := []model.QuizHistory{}
+
+	result, err := database.GetScoreQuizHistories(&quizHistories, data, score)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "Failed to get quiz histories",
+			"error":   err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"code":    http.StatusNotFound,
+			"message": "Quiz histories not found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    http.StatusOK,
+		"message": "Success to get quiz histories",
+		"data":    quizHistories,
+	})
+}
+
+func GetAttemptDateRangeQuizHistoriesController(c echo.Context) error {
+	startDate := c.QueryParam("start_date")
+	endDate := c.QueryParam("end_date")
+	quizHistories := []model.QuizHistory{}
+
+	result, err := database.GetAttemptDateRangeQuizHistories(&quizHistories, startDate, endDate)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "Failed to get quiz histories",
+			"error":   err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"code":    http.StatusNotFound,
+			"message": "Quiz histories not found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    http.StatusOK,
+		"message": "Success to get quiz histories",
+		"data":    quizHistories,
+	})
+}

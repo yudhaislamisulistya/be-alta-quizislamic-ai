@@ -106,6 +106,8 @@ func New() *echo.Echo {
 	eJwt.GET("/quiz-histories", controller.GetQuizHistoriesController)
 	eJwt.GET("/quiz-histories/pagination", controller.GetPaginationQuizHistoriesController)
 	eJwt.GET("/quiz-histories/sort", controller.GetSortQuizHistoriesController)
+	eJwt.GET("/quiz-histories/score", controller.GetScoreQuizHistoriesController)
+	eJwt.GET("/quiz-histories/attempt-date-range", controller.GetAttemptDateRangeQuizHistoriesController)
 	eJwt.GET("/quiz-histories/:id", controller.GetQuizHistoryController)
 	eJwt.GET("/quiz-histories/user/:id", controller.GetByUserIDQuizHistoriesController)
 	eJwt.GET("/quiz-histories/quizzes/:id", controller.GetByQuizIDQuizHistoriesController)

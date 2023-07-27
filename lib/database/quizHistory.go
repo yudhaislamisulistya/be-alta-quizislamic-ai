@@ -180,3 +180,53 @@ func GetPaginationQuizHistories(quizHistories *[]model.QuizHistory, page string,
 	}
 	return quizHistories, nil
 }
+
+func GetScoreQuizHistories(quizHistories *[]model.QuizHistory, data string, score string) (interface{}, error) {
+	scoreInt, errScoreInt := strconv.Atoi(score)
+	if errScoreInt != nil {
+		return nil, errors.New("score must be integer")
+	}
+
+	result := config.DB
+
+	if data == "greater_than" {
+		result = config.DB.Where("score > ?", scoreInt).Find(quizHistories)
+	} else if data == "less_than" {
+		result = config.DB.Where("score < ?", scoreInt).Find(quizHistories)
+	} else if data == "greater_than_equal" {
+		result = config.DB.Where("score >= ?", scoreInt).Find(quizHistories)
+	} else if data == "less_than_equal" {
+		result = config.DB.Where("score <= ?", scoreInt).Find(quizHistories)
+	} else if data == "equal" {
+		result = config.DB.Where("score = ?", scoreInt).Find(quizHistories)
+	} else if data == "not_equal" {
+		result = config.DB.Where("score != ?", scoreInt).Find(quizHistories)
+	}
+
+	err := result.Error
+	len := result.RowsAffected
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+	return quizHistories, nil
+}
+
+func GetAttemptDateRangeQuizHistories(quizHistories *[]model.QuizHistory, startDate string, endDate string) (interface{}, error) {
+	result := config.DB.Where("attempt_date BETWEEN ? AND ?", startDate, endDate).Find(quizHistories)
+	err := result.Error
+	len := result.RowsAffected
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+	return quizHistories, nil
+}
