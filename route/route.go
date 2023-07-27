@@ -141,6 +141,19 @@ func New() *echo.Echo {
 	eJwt.PUT("/package-histories/:id", controller.UpdatePackageHistoryController)
 	eJwt.DELETE("/package-histories/:id", controller.DeletePackageHistoryController)
 
+	// package rest api
+	eJwt.GET("/wallet-transactions", controller.GetWalletTransactionsController)
+	eJwt.GET("/wallet-transactions/pagination", controller.GetPaginationWalletTransactionsController)
+	eJwt.GET("/wallet-transactions/sort", controller.GetSortWalletTransactionsController)
+	eJwt.GET("/wallet-transactions/filter", controller.GetFilterWalletTransactionsController)
+	eJwt.GET("/wallet-transactions/amount", controller.GetAmountWalletTransactionsController)
+	eJwt.GET("/wallet-transactions/transaction-date-range", controller.GetTransactionDateRangeWalletTransactionsController)
+	eJwt.GET("/wallet-transactions/wallets/:id", controller.GetByWalletIDWalletTransactionController)
+	eJwt.GET("/wallet-transactions/:id", controller.GetWalletTransactionController)
+	eJwt.POST("/wallet-transactions", controller.CreateWalletTransactionController)
+	eJwt.PUT("/wallet-transactions/:id", controller.UpdateWalletTransactionController)
+	eJwt.DELETE("/wallet-transactions/:id", controller.DeleteWalletTransactionController)
+
 	g := e.Group("/authentications")
 	g.POST("/login", controller.LoginAuthenticationController)
 	g.POST("/forgot-password", controller.ForgotPasswordController)

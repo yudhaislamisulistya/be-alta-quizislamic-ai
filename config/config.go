@@ -52,6 +52,7 @@ func InitialMigration() {
 	DB.AutoMigrate(&model.QuizHistory{})
 	DB.AutoMigrate(&model.QuizAnswer{})
 	DB.AutoMigrate(&model.PackageHistory{})
+	DB.AutoMigrate(&model.WalletTransaction{})
 }
 
 func LoadDotEnv() {
