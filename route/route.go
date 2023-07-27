@@ -127,6 +127,20 @@ func New() *echo.Echo {
 	eJwt.PUT("/quiz-answers/:id", controller.UpdateQuizAnswerController)
 	eJwt.DELETE("/quiz-answers/:id", controller.DeleteQuizAnswerController)
 
+	// quiz answer rest api
+	eJwt.GET("/package-histories", controller.GetPackageHistoriesController)
+	eJwt.GET("/package-histories/search", controller.GetSearchPackageHistoriesController)
+	eJwt.GET("/package-histories/pagination", controller.GetPaginationPackageHistoriesController)
+	eJwt.GET("/package-histories/sort", controller.GetSortPackageHistoriesController)
+	eJwt.GET("/package-histories/filter", controller.GetFilterPackageHistoriesController)
+	eJwt.GET("/package-histories/:id", controller.GetPackageHistoryController)
+	eJwt.GET("/quiz-histories/transaction-date-range", controller.GetTransactionDateRangePackageHistoriesController)
+	eJwt.GET("/package-histories/packages/:id", controller.GetByPackageIDPackageHistoriesController)
+	eJwt.GET("/package-histories/users/:id", controller.GetByUserIDPackageHistoriesController)
+	eJwt.POST("/package-histories", controller.CreatePackageHistoryController)
+	eJwt.PUT("/package-histories/:id", controller.UpdatePackageHistoryController)
+	eJwt.DELETE("/package-histories/:id", controller.DeletePackageHistoryController)
+
 	g := e.Group("/authentications")
 	g.POST("/login", controller.LoginAuthenticationController)
 	g.POST("/forgot-password", controller.ForgotPasswordController)
