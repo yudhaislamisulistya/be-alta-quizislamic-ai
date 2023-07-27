@@ -115,6 +115,18 @@ func New() *echo.Echo {
 	eJwt.PUT("/quiz-histories/:id", controller.UpdateQuizHistoryController)
 	eJwt.DELETE("/quiz-histories/:id", controller.DeleteQuizHistoryController)
 
+	// quiz answer rest api
+	eJwt.GET("/quiz-answers", controller.GetQuizAnswersController)
+	eJwt.GET("/quiz-answers/pagination", controller.GetPaginationQuizAnswersController)
+	eJwt.GET("/quiz-answers/sort", controller.GetSortQuizAnswersController)
+	eJwt.GET("/quiz-answers/filter", controller.GetFilterQuizAnswersController)
+	eJwt.GET("/quiz-answers/:id", controller.GetQuizAnswerController)
+	eJwt.GET("/quiz-answers/quiz-histories/:id", controller.GetByQuizHistoryIDQuizAnswersController)
+	eJwt.GET("/quiz-answers/questions/:id", controller.GetByQuestionIDQuizAnswersController)
+	eJwt.POST("/quiz-answers", controller.CreateQuizAnswerController)
+	eJwt.PUT("/quiz-answers/:id", controller.UpdateQuizAnswerController)
+	eJwt.DELETE("/quiz-answers/:id", controller.DeleteQuizAnswerController)
+
 	g := e.Group("/authentications")
 	g.POST("/login", controller.LoginAuthenticationController)
 	g.POST("/forgot-password", controller.ForgotPasswordController)
