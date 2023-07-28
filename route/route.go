@@ -127,7 +127,7 @@ func New() *echo.Echo {
 	eJwt.PUT("/quiz-answers/:id", controller.UpdateQuizAnswerController)
 	eJwt.DELETE("/quiz-answers/:id", controller.DeleteQuizAnswerController)
 
-	// quiz answer rest api
+	// package history rest api
 	eJwt.GET("/package-histories", controller.GetPackageHistoriesController)
 	eJwt.GET("/package-histories/search", controller.GetSearchPackageHistoriesController)
 	eJwt.GET("/package-histories/pagination", controller.GetPaginationPackageHistoriesController)
@@ -153,6 +153,18 @@ func New() *echo.Echo {
 	eJwt.POST("/wallet-transactions", controller.CreateWalletTransactionController)
 	eJwt.PUT("/wallet-transactions/:id", controller.UpdateWalletTransactionController)
 	eJwt.DELETE("/wallet-transactions/:id", controller.DeleteWalletTransactionController)
+
+	// quiz review rest api
+	eJwt.GET("/quiz-reviews", controller.GetQuizReviewsController)
+	eJwt.GET("/quiz-reviews/pagination", controller.GetPaginationQuizReviewsController)
+	eJwt.GET("/quiz-reviews/sort", controller.GetSortQuizReviewsController)
+	eJwt.GET("/quiz-reviews/filter", controller.GetFilterQuizReviewsController)
+	eJwt.GET("/quiz-reviews/:id", controller.GetQuizReviewController)
+	eJwt.GET("/quiz-reviews/quizzes/:id", controller.GetByQuizIDQuizReviewsController)
+	eJwt.GET("/quiz-reviews/users/:id", controller.GetByUserIDQuizReviewsController)
+	eJwt.POST("/quiz-reviews", controller.CreateQuizReviewController)
+	eJwt.PUT("/quiz-reviews/:id", controller.UpdateQuizReviewController)
+	eJwt.DELETE("/quiz-reviews/:id", controller.DeleteQuizReviewController)
 
 	g := e.Group("/authentications")
 	g.POST("/login", controller.LoginAuthenticationController)
