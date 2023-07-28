@@ -264,3 +264,30 @@ func GetFilterQuizReviewsController(c echo.Context) error {
 		"data":    quizReviews,
 	})
 }
+
+func GetSearchQuizReviewsController(c echo.Context) error {
+	keyword := c.QueryParam("keyword")
+	quizReviews := []model.QuizReview{}
+
+	result, err := database.GetSearchQuizReviews(&quizReviews, keyword)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+			"message": "Failed to get quiz reviews",
+			"error":   err.Error(),
+		})
+	}
+
+	if result == int64(0) {
+		return c.JSON(http.StatusNotFound, map[string]interface{}{
+			"code":    http.StatusNotFound,
+			"message": "Quiz reviews not found",
+		})
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"code":    http.StatusOK,
+		"message": "Success to get quiz reviews",
+		"data":    quizReviews,
+	})
+}

@@ -156,6 +156,7 @@ func New() *echo.Echo {
 
 	// quiz review rest api
 	eJwt.GET("/quiz-reviews", controller.GetQuizReviewsController)
+	eJwt.GET("/quiz-reviews/search", controller.GetSearchQuizReviewsController)
 	eJwt.GET("/quiz-reviews/pagination", controller.GetPaginationQuizReviewsController)
 	eJwt.GET("/quiz-reviews/sort", controller.GetSortQuizReviewsController)
 	eJwt.GET("/quiz-reviews/filter", controller.GetFilterQuizReviewsController)

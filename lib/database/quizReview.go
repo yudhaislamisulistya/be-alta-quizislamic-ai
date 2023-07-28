@@ -44,13 +44,13 @@ func GetQuizReview(QuizReview *model.QuizReview, id string) (interface{}, error)
 	return QuizReview, nil
 }
 
-func GetByUserIDQuizReviews(quizAnswers *[]model.QuizReview, id string) (interface{}, error) {
+func GetByUserIDQuizReviews(quizReviews *[]model.QuizReview, id string) (interface{}, error) {
 	idInt, errIdInt := strconv.Atoi(id)
 	if errIdInt != nil {
 		return nil, errors.New("id must be integer")
 	}
 
-	result := config.DB.Where("user_id = ?", idInt).Find(quizAnswers)
+	result := config.DB.Where("user_id = ?", idInt).Find(quizReviews)
 	err := result.Error
 	len := result.RowsAffected
 
@@ -62,16 +62,16 @@ func GetByUserIDQuizReviews(quizAnswers *[]model.QuizReview, id string) (interfa
 		return len, nil
 	}
 
-	return quizAnswers, nil
+	return quizReviews, nil
 }
 
-func GetByQuizIDQuizReviews(quizAnswers *[]model.QuizReview, id string) (interface{}, error) {
+func GetByQuizIDQuizReviews(quizReviews *[]model.QuizReview, id string) (interface{}, error) {
 	idInt, errIdInt := strconv.Atoi(id)
 	if errIdInt != nil {
 		return nil, errors.New("id must be integer")
 	}
 
-	result := config.DB.Where("quiz_id = ?", idInt).Find(quizAnswers)
+	result := config.DB.Where("quiz_id = ?", idInt).Find(quizReviews)
 	err := result.Error
 	len := result.RowsAffected
 
@@ -83,7 +83,7 @@ func GetByQuizIDQuizReviews(quizAnswers *[]model.QuizReview, id string) (interfa
 		return len, nil
 	}
 
-	return quizAnswers, nil
+	return quizReviews, nil
 }
 
 func CreateQuizReview(QuizReview *model.QuizReview) (interface{}, error) {
@@ -140,8 +140,8 @@ func DeleteQuizReview(id string) (interface{}, error) {
 	return len, nil
 }
 
-func GetSortQuizReviews(quizAnswers *[]model.QuizReview, sortBy string, order string) (interface{}, error) {
-	result := config.DB.Order(sortBy + " " + order).Find(quizAnswers)
+func GetSortQuizReviews(quizReviews *[]model.QuizReview, sortBy string, order string) (interface{}, error) {
+	result := config.DB.Order(sortBy + " " + order).Find(quizReviews)
 	err := result.Error
 	len := result.RowsAffected
 
@@ -152,10 +152,10 @@ func GetSortQuizReviews(quizAnswers *[]model.QuizReview, sortBy string, order st
 	if len == 0 {
 		return len, nil
 	}
-	return quizAnswers, nil
+	return quizReviews, nil
 }
 
-func GetPaginationQuizReviews(quizAnswers *[]model.QuizReview, page string, limit string) (interface{}, error) {
+func GetPaginationQuizReviews(quizReviews *[]model.QuizReview, page string, limit string) (interface{}, error) {
 	pageInt, errPageInt := strconv.Atoi(page)
 	if errPageInt != nil {
 		return nil, errors.New("page must be integer")
@@ -167,7 +167,7 @@ func GetPaginationQuizReviews(quizAnswers *[]model.QuizReview, page string, limi
 	}
 
 	offset := (pageInt - 1) * limitInt
-	result := config.DB.Offset(offset).Limit(limitInt).Find(quizAnswers)
+	result := config.DB.Offset(offset).Limit(limitInt).Find(quizReviews)
 	err := result.Error
 	len := result.RowsAffected
 
@@ -178,16 +178,16 @@ func GetPaginationQuizReviews(quizAnswers *[]model.QuizReview, page string, limi
 	if len == 0 {
 		return len, nil
 	}
-	return quizAnswers, nil
+	return quizReviews, nil
 }
 
-func GetFilterQuizReviews(quizAnswers *[]model.QuizReview, isCorrect string) (interface{}, error) {
+func GetFilterQuizReviews(quizReviews *[]model.QuizReview, isCorrect string) (interface{}, error) {
 	isCorrectBool, errIsCorrectBool := strconv.ParseBool(isCorrect)
 	if errIsCorrectBool != nil {
 		return nil, errors.New("is_correct must be boolean")
 	}
 
-	result := config.DB.Where("is_correct = ?", isCorrectBool).Find(quizAnswers)
+	result := config.DB.Where("is_correct = ?", isCorrectBool).Find(quizReviews)
 	err := result.Error
 	len := result.RowsAffected
 
@@ -199,5 +199,21 @@ func GetFilterQuizReviews(quizAnswers *[]model.QuizReview, isCorrect string) (in
 		return len, nil
 	}
 
-	return quizAnswers, nil
+	return quizReviews, nil
+}
+
+func GetSearchQuizReviews(quizReviews *[]model.QuizReview, keyword string) (interface{}, error) {
+	result := config.DB.Where("review_text LIKE ?", "%"+keyword+"%").Find(quizReviews)
+	err := result.Error
+	len := result.RowsAffected
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len == 0 {
+		return len, nil
+	}
+
+	return quizReviews, nil
 }
