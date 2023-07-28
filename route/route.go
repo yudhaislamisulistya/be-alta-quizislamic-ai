@@ -167,6 +167,28 @@ func New() *echo.Echo {
 	eJwt.PUT("/quiz-reviews/:id", controller.UpdateQuizReviewController)
 	eJwt.DELETE("/quiz-reviews/:id", controller.DeleteQuizReviewController)
 
+	// activity log rest api
+	eJwt.GET("/activity-logs", controller.GetActivityLogsController)
+	eJwt.GET("/activity-logs/pagination", controller.GetPaginationActivityLogsController)
+	eJwt.GET("/activity-logs/sort", controller.GetSortActivityLogsController)
+	eJwt.GET("/activity-logs/filter", controller.GetFilterActivityLogsController)
+	eJwt.GET("/activity-logs/:id", controller.GetActivityLogController)
+	eJwt.GET("/activity-logs/users/:id", controller.GetByUserIDActivityLogsController)
+	eJwt.POST("/activity-logs", controller.CreateActivityLogController)
+	eJwt.PUT("/activity-logs/:id", controller.UpdateActivityLogController)
+	eJwt.DELETE("/activity-logs/:id", controller.DeleteActivityLogController)
+
+	// notification rest api
+	eJwt.GET("/notifications", controller.GetNotificationsController)
+	eJwt.GET("/notifications/pagination", controller.GetPaginationNotificationsController)
+	eJwt.GET("/notifications/sort", controller.GetSortNotificationsController)
+	eJwt.GET("/notifications/filter", controller.GetFilterNotificationsController)
+	eJwt.GET("/notifications/:id", controller.GetNotificationController)
+	eJwt.GET("/notifications/users/:id", controller.GetByUserIDNotificationsController)
+	eJwt.POST("/notifications", controller.CreateNotificationController)
+	eJwt.PUT("/notifications/:id", controller.UpdateNotificationController)
+	eJwt.DELETE("/notifications/:id", controller.DeleteNotificationController)
+
 	g := e.Group("/authentications")
 	g.POST("/login", controller.LoginAuthenticationController)
 	g.POST("/forgot-password", controller.ForgotPasswordController)
