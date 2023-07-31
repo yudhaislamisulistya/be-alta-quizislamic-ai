@@ -1,9 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"project/config"
+	"project/route"
 )
 
 func main() {
-	fmt.Println("Alta Project - CourseGenAI")
+	config.LoadDotEnv()
+	config.InitDB()
+	config.InitialMigration()
+	e := route.New()
+	e.Logger.Fatal(e.Start(":8080"))
 }

@@ -1,0 +1,5 @@
+# Ignore .env file
+.env
+*.log
+/bin/main
+/tmp/build-errors.log
