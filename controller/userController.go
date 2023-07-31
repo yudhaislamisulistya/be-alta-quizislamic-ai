@@ -213,9 +213,9 @@ func DeleteUserController(c echo.Context) error {
 	user := model.User{}
 	temp_user_delete := model.User{}
 
-	config.DB.Where("ids = ?", id).First(&temp_user_delete)
+	config.DB.Where("id = ?", id).First(&temp_user_delete)
 
-	result := config.DB.Unscoped().Where("ids = ?", id).Delete(&user)
+	result := config.DB.Unscoped().Where("id = ?", id).Delete(&user)
 
 	err := result.Error
 	len := result.RowsAffected
