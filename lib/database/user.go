@@ -205,7 +205,7 @@ func GetByBirthYearUsers(users *[]model.User, year string) (interface{}, error) 
 }
 
 func GetEmptyProfilePhotoUsers(users *[]model.User) (interface{}, error) {
-	result := config.DB.Where("profile_photo = ?", "").Find(&users)
+	result := config.DB.Where("profile_photos = ?", "").Find(&users)
 	errResult := result.Error
 	len := result.RowsAffected
 

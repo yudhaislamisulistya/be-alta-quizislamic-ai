@@ -8,7 +8,6 @@ import (
 	"project/config"
 	"project/lib/database"
 	"project/lib/util"
-	"project/middleware"
 	"project/model"
 	"strconv"
 	"time"
@@ -18,37 +17,13 @@ import (
 
 func GetUsersController(c echo.Context) error {
 	sort := c.FormValue("sort")
-	fmt.Println(sort)
 	users := []model.User{}
-	header := model.Header{}
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
 
-	c.Bind(&header)
-	header.Authorization = c.Request().Header.Get("Authorization")
-	header.Authorization = header.Authorization[len("Bearer "):]
-	claims, errClaims := middleware.ExtractClaims(header.Authorization)
-
-	if errClaims != nil {
+	if errValidateAdminToken != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"code":    "500",
-			"message": errClaims.Error(),
-		})
-	}
-
-	uuid := claims["uuid"].(string)
-
-	resultUser := util.GetUserControllerByUUID(uuid)
-
-	if resultUser.(map[string]interface{})["data"].(model.User).Token != header.Authorization {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"code":    "500",
-			"message": "Token Tidak Valid, Silahkan login ulang untuk mendapatkan token baru",
-		})
-	}
-
-	if !resultUser.(map[string]interface{})["data"].(model.User).IsAdmin {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"code":    "500",
-			"message": "Anda Bukan Admin",
+			"message": errValidateAdminToken.Error(),
 		})
 	}
 
@@ -238,9 +213,9 @@ func DeleteUserController(c echo.Context) error {
 	user := model.User{}
 	temp_user_delete := model.User{}
 
-	config.DB.Where("id = ?", id).First(&temp_user_delete)
+	config.DB.Where("ids = ?", id).First(&temp_user_delete)
 
-	result := config.DB.Unscoped().Where("id = ?", id).Delete(&user)
+	result := config.DB.Unscoped().Where("ids = ?", id).Delete(&user)
 
 	err := result.Error
 	len := result.RowsAffected
@@ -391,6 +366,16 @@ func CreateVerificationEmailUserController(c echo.Context) error {
 }
 
 func GetFilterUsersController(c echo.Context) error {
+
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
+
 	isAdminStr := c.QueryParam("is_admin")
 	accountStatus := c.QueryParam("account_status")
 	isVerifiedEmailStr := c.QueryParam("is_verified_email")
@@ -543,6 +528,15 @@ func GetByGenderUsersController(c echo.Context) error {
 	gender := c.Param("gender")
 	users := []model.User{}
 
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
+
 	result, err := database.GetByGenderUsers(&users, gender)
 
 	if err != nil {
@@ -571,6 +565,15 @@ func GetByRegistrationMethodUserController(c echo.Context) error {
 	fmt.Println(method)
 	users := []model.User{}
 
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
+
 	result, err := database.GetByRegistrationMethodUsers(&users, method)
 
 	if err != nil {
@@ -597,6 +600,15 @@ func GetByRegistrationMethodUserController(c echo.Context) error {
 func GetByVerifiedEmailStatusUsersController(c echo.Context) error {
 	verifiedEmailStatus := c.Param("status")
 	users := []model.User{}
+
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
 
 	result, err := database.GetByVerifiedEmailStatusUsers(&users, verifiedEmailStatus)
 
@@ -625,12 +637,21 @@ func GetByBirthYearUsersController(c echo.Context) error {
 	year := c.Param("year")
 	users := []model.User{}
 
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
+
 	result, err := database.GetByBirthYearUsers(&users, year)
 
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{
 			"code":    "500",
-			"message": "Gagal Mendapatkan Filter User",
+			"message": err.Error(),
 		})
 	}
 
@@ -650,6 +671,15 @@ func GetByBirthYearUsersController(c echo.Context) error {
 
 func GetEmptyProfilePhotoUsersController(c echo.Context) error {
 	users := []model.User{}
+
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
 
 	result, err := database.GetEmptyProfilePhotoUsers(&users)
 
@@ -677,6 +707,15 @@ func GetEmptyProfilePhotoUsersController(c echo.Context) error {
 func GetTokenExpiredUsersController(c echo.Context) error {
 	users := []model.User{}
 
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
+
 	result, err := database.GetTokenExpiredUsers(&users)
 
 	if err != nil {
@@ -703,6 +742,15 @@ func GetTokenExpiredUsersController(c echo.Context) error {
 func GetTokenVerifiedEmailUsersController(c echo.Context) error {
 	token := c.Param("token")
 	users := []model.User{}
+
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
 
 	result, err := database.GetTokenVerifiedEmailUsers(&users, token)
 
@@ -732,6 +780,15 @@ func GetJoinedDateRangeUsersController(c echo.Context) error {
 	endDate := c.QueryParam("end_date")
 	users := []model.User{}
 
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
+
 	result, err := database.GetJoinedDateRangeUsers(&users, startDate, endDate)
 
 	if err != nil {
@@ -758,6 +815,15 @@ func GetJoinedDateRangeUsersController(c echo.Context) error {
 func GetSearchUsersController(c echo.Context) error {
 	keyword := c.QueryParam("keyword")
 	users := []model.User{}
+
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
 
 	result, err := database.GetSearchUsers(&users, keyword)
 
@@ -786,6 +852,15 @@ func GetSortUsersController(c echo.Context) error {
 	sortBy := c.QueryParam("sort_by")
 	order := c.QueryParam("order")
 	users := []model.User{}
+
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
 
 	result, err := database.GetSortUsers(&users, sortBy, order)
 
@@ -816,6 +891,15 @@ func GetPaginationUsersController(c echo.Context) error {
 	limit := c.QueryParam("limit")
 	users := []model.User{}
 
+	_, errValidateAdminToken := util.ValidateAdminToken(c)
+
+	if errValidateAdminToken != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{
+			"code":    "500",
+			"message": errValidateAdminToken.Error(),
+		})
+	}
+
 	result, err := database.GetPaginationUsers(&users, page, limit)
 
 	if err != nil {
@@ -825,7 +909,7 @@ func GetPaginationUsersController(c echo.Context) error {
 		})
 	}
 
-	if result == nil {
+	if result == int64(0) {
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"code":    "200",
 			"message": "Data Kosong",
