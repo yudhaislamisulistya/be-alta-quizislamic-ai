@@ -195,7 +195,7 @@ func New() *echo.Echo {
 	g.POST("/change-password", controller.ChangePasswordController)
 
 	// Testing
-	e.GET("/test", func(c echo.Context) error {
+	e.GET("/test-1", func(c echo.Context) error {
 		return c.JSON(200, "Hello World")
 	})
 
