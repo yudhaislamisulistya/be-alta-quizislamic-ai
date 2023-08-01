@@ -20,12 +20,6 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: SSH to Server and Build Docker image
+    - name: SSH to Server, Build Docker image, Attach session, and Execute run_container.sh
       run: |
-        ssh -o StrictHostKeyChecking=no -i "key.pem" ec2-user@ec2-44-206-239-176.compute-1.amazonaws.com 'cd /var/www/be-alta-quizislamic-ai/ && docker build -t docker-app-quiz-islamic-ai .'
-
-    - name: Attach session
-      run: tmux attach-session -t app
-
-    - name: Execute run_container.sh 
-      run: './run_container.sh'
+        ssh -o StrictHostKeyChecking=no -i "key.pem" ec2-user@ec2-44-206-239-176.compute-1.amazonaws.com 'cd /var/www/be-alta-quizislamic-ai/ && docker build -t docker-app-quiz-islamic-ai . && tmux attach -t app "./run_container.sh"'
