@@ -1,0 +1,27 @@
+name: Docker Build and Run
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build_and_run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: docker build -t docker-app-quiz-islamic-ai .
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Attach session
+      run: tmux attach-session -t app
+
+    - name: Execute run_container.sh 
+      run: './run_container.sh'
