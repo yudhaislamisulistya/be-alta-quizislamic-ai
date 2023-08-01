@@ -21,11 +21,18 @@ jobs:
       with:
         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-    - name: Build Docker image
-      run: docker build -t docker-app-quiz-islamic-ai .
+    - name: SSH to Server
+      run: |
+        # Replace 'user' with the actual username on the server
+        # Replace 'server_ip' with the IP address or hostname of the server
+        # Replace 'key-quiz-islamic-ai.pem' with the actual private key filename
+        ssh -i "key.pem" ec2-user@ec2-44-206-239-176.compute-1.amazonaws.com
 
-    - name: Attach session
-      run: tmux attach-session -t app
+    # - name: Build Docker image
+    #   run: docker build -t docker-app-quiz-islamic-ai .
 
-    - name: Execute run_container.sh 
-      run: './run_container.sh'
+    # - name: Attach session
+    #   run: tmux attach-session -t app
+
+    # - name: Execute run_container.sh 
+    #   run: './run_container.sh'
