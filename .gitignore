@@ -3,3 +3,4 @@
 *.log
 /bin/main
 /tmp/build-errors.log
+/tmp/main
