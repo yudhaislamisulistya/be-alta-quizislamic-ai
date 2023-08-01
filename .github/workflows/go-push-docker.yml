@@ -12,6 +12,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # echo SSH_PRIVATE_KEY | base64 -d > ~/.ssh/id_rsa
+    - name: Echo SSH_PRIVATE_KEY
+      run: echo ${{ secrets.SSH_PRIVATE_KEY }}
+
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.7.0
       with:
