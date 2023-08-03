@@ -7,29 +7,25 @@ import (
 	"strconv"
 )
 
-func GetActivityLogs(activityLogs *[]model.ActivityLog) (interface{}, error) {
-	result := config.DB.Find(&activityLogs)
+func GetActivityLogs(activityLogs *[]model.ActivityLog) (int64, error) {
+	result := config.DB.Find(activityLogs)
 	err := result.Error
 	len := result.RowsAffected
 
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 
-	if len == 0 {
-		return len, nil
-	}
-
-	return activityLogs, nil
+	return len, nil
 }
 
-func GetActivityLog(ActivityLog *model.ActivityLog, id string) (interface{}, error) {
+func GetActivityLog(activityLog *model.ActivityLog, id string) (interface{}, error) {
 	idInt, errIdInt := strconv.Atoi(id)
 	if errIdInt != nil {
 		return nil, errors.New("id must be integer")
 	}
 
-	result := config.DB.First(ActivityLog, idInt)
+	result := config.DB.First(activityLog, idInt)
 	err := result.Error
 	len := result.RowsAffected
 
@@ -41,7 +37,7 @@ func GetActivityLog(ActivityLog *model.ActivityLog, id string) (interface{}, err
 		return len, nil
 	}
 
-	return ActivityLog, nil
+	return activityLog, nil
 }
 
 func GetByUserIDActivityLogs(activityLogs *[]model.ActivityLog, id string) (interface{}, error) {

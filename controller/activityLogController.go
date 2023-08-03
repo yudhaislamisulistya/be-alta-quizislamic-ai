@@ -6,59 +6,72 @@ import (
 	"project/model"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
-func GetActivityLogsController(c echo.Context) error {
-	activityLogs := []model.ActivityLog{}
-
-	result, err := database.GetActivityLogs(&activityLogs)
-
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{
-			"code":    "500",
-			"message": err.Error(),
-		})
-	}
-
-	if result == int64(0) {
-		return c.JSON(http.StatusNotFound, map[string]string{
-			"code":    "404",
-			"message": "Data Not Found",
-		})
-	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"code":    "200",
-		"message": "success get quiz",
-		"data":    result,
-	})
+type DB interface {
+	Find(dest interface{}, conds ...interface{}) *gorm.DB
+	Create(value interface{}) *gorm.DB
+	Where(query interface{}, args ...interface{}) *gorm.DB
 }
 
-func GetActivityLogController(c echo.Context) error {
-	id := c.Param("id")
-	quizReview := model.ActivityLog{}
+func GetActivityLogsController(db DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		activityLogs := []model.ActivityLog{}
 
-	result, err := database.GetActivityLog(&quizReview, id)
+		// Panggil fungsi Find dari parameter db
+		result := db.Find(&activityLogs)
 
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-			"message": "Failed to get activity log",
-			"error":   err.Error(),
+		if result.Error != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{
+				"code":    "500",
+				"message": result.Error.Error(),
+			})
+		}
+
+		// Ubah pemanggilan len menjadi RowsAffected
+		if result.RowsAffected == 0 {
+			return c.JSON(http.StatusNotFound, map[string]string{
+				"code":    "404",
+				"message": "Data Not Found",
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    "200",
+			"message": "success get quiz",
+			"data":    activityLogs,
 		})
 	}
+}
 
-	if result == int64(0) {
-		return c.JSON(http.StatusNotFound, map[string]interface{}{
-			"code":    http.StatusNotFound,
-			"message": "Quiz activity log not found",
+func GetActivityLogController(db DB) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := c.Param("id")
+		quizReview := model.ActivityLog{}
+
+		result, err := database.GetActivityLog(&quizReview, id)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"message": "Failed to get activity log",
+				"error":   err.Error(),
+			})
+		}
+
+		if result == int64(0) {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"code":    http.StatusNotFound,
+				"message": "Quiz activity log not found",
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    http.StatusOK,
+			"message": "Success to get activity log",
+			"data":    quizReview,
 		})
 	}
-
-	return c.JSON(http.StatusOK, map[string]interface{}{
-		"code":    http.StatusOK,
-		"message": "Success to get activity log",
-		"data":    quizReview,
-	})
 }
 
 func GetByUserIDActivityLogsController(c echo.Context) error {

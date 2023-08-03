@@ -1,6 +1,7 @@
 package route
 
 import (
+	"project/config"
 	"project/constant"
 	"project/controller"
 
@@ -168,11 +169,11 @@ func New() *echo.Echo {
 	eJwt.DELETE("/quiz-reviews/:id", controller.DeleteQuizReviewController)
 
 	// activity log rest api
-	eJwt.GET("/activity-logs", controller.GetActivityLogsController)
+	eJwt.GET("/activity-logs", controller.GetActivityLogsController(config.DB))
 	eJwt.GET("/activity-logs/pagination", controller.GetPaginationActivityLogsController)
 	eJwt.GET("/activity-logs/sort", controller.GetSortActivityLogsController)
 	eJwt.GET("/activity-logs/filter", controller.GetFilterActivityLogsController)
-	eJwt.GET("/activity-logs/:id", controller.GetActivityLogController)
+	eJwt.GET("/activity-logs/:id", controller.GetActivityLogController(config.DB))
 	eJwt.GET("/activity-logs/users/:id", controller.GetByUserIDActivityLogsController)
 	eJwt.POST("/activity-logs", controller.CreateActivityLogController)
 	eJwt.PUT("/activity-logs/:id", controller.UpdateActivityLogController)
