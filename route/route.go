@@ -204,5 +204,9 @@ func New() *echo.Echo {
 		return c.JSON(200, "Selamat Datang")
 	})
 
+	e.GET("/test-3", func(c echo.Context) error {
+		return c.JSON(200, "Alta.ID Baru")
+	})
+
 	return e
 }
